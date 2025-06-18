@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { KeyboardOctave } from "./KeyboardOctave";
 
 interface KeyboardWrapperProps {
@@ -8,9 +8,24 @@ interface KeyboardWrapperProps {
 
 export function KeyboardWrapper({ onNoteDown, onNoteUp }: KeyboardWrapperProps) {
   const [octave, setOctave] = useState(5);
+  const activeNote = useRef<string | null>(null);
+
   const min = 1;
   const max = 8;
   const relative = octave - 5;
+
+  const handleNoteDown = (note: string) => {
+    if (activeNote.current === note) return; // évite redéclenchement
+    activeNote.current = note;
+    onNoteDown(note);
+  };
+
+  const handleNoteUp = () => {
+    if (activeNote.current !== null) {
+      onNoteUp();
+      activeNote.current = null;
+    }
+  };
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -37,8 +52,8 @@ export function KeyboardWrapper({ onNoteDown, onNoteUp }: KeyboardWrapperProps) 
       <div className="flex items-center h-full">
         <KeyboardOctave
           baseOctave={octave}
-          onNoteDown={onNoteDown}
-          onNoteUp={onNoteUp}
+          onNoteDown={handleNoteDown}
+          onNoteUp={handleNoteUp}
         />
       </div>
     </div>

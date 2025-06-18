@@ -13,7 +13,7 @@ interface FxWrapperProps {
 
 export function FxWrapper({ engine }: FxWrapperProps) {
   return (
-    <div className="w-full max-h-60 flex-col overflow-y-auto gap-4 py-2 px-1 custom-scrollbar">
+    <div className="w-full max-h-50 flex-col overflow-y-auto gap-4 py-2 px-1 custom-scrollbar">
       <ReverbCard engine={engine} />
       <DistortionCard engine={engine} />
       <DelayCard engine={engine} />

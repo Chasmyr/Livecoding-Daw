@@ -13,8 +13,12 @@ export function NoiseCard({ engine }: NoiseCardProps) {
   const noiseGain = engine.noise.gain;
 
   // Convertir en dB pour l'état initial
-  const initialDb = Tone.gainToDb(noiseGain.gain.value);
-  const initialVolume = Math.round(((initialDb + 60) / 60) * 100);
+  const rawGain = noiseGain.gain.value;
+  const initialDb = Tone.gainToDb(rawGain);
+  const initialVolume = Number.isFinite(initialDb)
+    ? Math.round(((initialDb + 60) / 60) * 100)
+    : 0; // fallback sécurisé
+
 
   const [enabled, setEnabled] = useState(noiseGain.gain.value > 0);
   const [volume, setVolume] = useState(initialVolume);
@@ -57,7 +61,7 @@ export function NoiseCard({ engine }: NoiseCardProps) {
           min={0}
           max={100}
           step={1}
-          value={volume}
+          value={Number.isFinite(volume) ? volume : 0}
           onChange={handleVolumeChange}
           size={40}
         />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface KeyboardOctaveProps {
   onNoteDown: (note: string) => void;
@@ -21,6 +21,8 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
   baseOctave = 5,
 }) => {
   const [octaves, setOctaves] = useState(2);
+  const isMouseDown = useRef(false);
+  const activeNote = useRef<string | null>(null);
 
   useEffect(() => {
     const updateOctaves = () => {
@@ -37,8 +39,29 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
     return () => window.removeEventListener("resize", updateOctaves);
   }, []);
 
+  useEffect(() => {
+    const handleMouseUp = () => {
+      if (isMouseDown.current) {
+        isMouseDown.current = false;
+        activeNote.current = null;
+        onNoteUp();
+      }
+    };
+
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => document.removeEventListener("mouseup", handleMouseUp);
+  }, [onNoteUp]);
+
   const totalWhiteKeys = WHITE_KEYS.length * octaves;
   const keyWidth = 100 / totalWhiteKeys;
+
+  const handleMouseDown = (note: string) => {
+    if (!isMouseDown.current || activeNote.current !== note) {
+      isMouseDown.current = true;
+      activeNote.current = note;
+      onNoteDown(note);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center">
@@ -56,9 +79,7 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
                 <button
                   key={fullNote}
                   className="flex-1 border-r border-zinc-400 active:bg-blue-200 last:border-none"
-                  onMouseDown={() => onNoteDown(fullNote)}
-                  onMouseUp={onNoteUp}
-                  onMouseLeave={onNoteUp}
+                  onMouseDown={() => handleMouseDown(fullNote)}
                 >
                   &nbsp;
                 </button>
@@ -81,9 +102,7 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
                   left: `${(position + indexOffset + 1) * keyWidth - keyWidth / 2}%`,
                   transform: "translateX(-50%)",
                 }}
-                onMouseDown={() => onNoteDown(fullNote)}
-                onMouseUp={onNoteUp}
-                onMouseLeave={onNoteUp}
+                onMouseDown={() => handleMouseDown(fullNote)}
               />
             );
           })
