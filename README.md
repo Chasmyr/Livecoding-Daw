@@ -114,7 +114,7 @@ docker-compose.yml
 
 ## 🧑‍💻 Développeur
 
-Projet personnel imaginé et conçu par **[Gabi]** ✨  
+Projet personnel imaginé et conçu par **Gabi** ✨  
 
 ---
 
