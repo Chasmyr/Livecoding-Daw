@@ -24,8 +24,16 @@ export function SynthPanel({ name }: SynthPanelProps)  {
     };
   }, []);
 
-  const handlePlayNote = (note: string) => {
-    engineRef.current?.synth.triggerAttackRelease(note, "8n");
+  const handleNoteDown = (note: string) => {
+    if (engineRef.current) {
+      engineRef.current.synth.triggerAttack(note);
+    }
+  };
+
+  const handleNoteUp = () => {
+    if (engineRef.current) {
+      engineRef.current.synth.triggerRelease();
+    }
   };
 
   return (
@@ -33,7 +41,7 @@ export function SynthPanel({ name }: SynthPanelProps)  {
       <h2 className="text-lg font-semibold text-teal-400">🎛 {name}</h2>
 
       <Tabs value={tab} onValueChange={setTab} className="w-full">
-        <TabsList className="w-full justify-around mb-4">
+        <TabsList className="w-full justify-around mb-0">
           <TabsTrigger value="synth">Synth</TabsTrigger>
           <TabsTrigger value="filter">Filter</TabsTrigger>
           <TabsTrigger value="fx">FX</TabsTrigger>
@@ -48,11 +56,18 @@ export function SynthPanel({ name }: SynthPanelProps)  {
         </TabsContent>
 
         <TabsContent value="fx">
-          <FxWrapper engine={engineRef.current} />
+          <div className="w-full px-2">
+            <FxWrapper engine={engineRef.current} />
+          </div>
         </TabsContent>
       </Tabs>
 
-      <KeyboardWrapper onPlayNote={handlePlayNote} />
+      <div className="border-t border-zinc-700 mb-4 mt-6" />
+
+      <KeyboardWrapper
+        onNoteDown={(note) => engineRef.current?.synth.triggerAttack(note)}
+        onNoteUp={() => engineRef.current?.synth.triggerRelease()}
+      />
     </div>
   );
 }

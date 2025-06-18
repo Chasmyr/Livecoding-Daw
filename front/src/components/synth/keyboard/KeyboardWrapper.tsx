@@ -2,14 +2,14 @@ import { useState } from "react";
 import { KeyboardOctave } from "./KeyboardOctave";
 
 interface KeyboardWrapperProps {
-  onPlayNote: (note: string) => void;
+  onNoteDown: (note: string) => void;
+  onNoteUp: () => void;
 }
 
-export function KeyboardWrapper({ onPlayNote }: KeyboardWrapperProps) {
-  const [octave, setOctave] = useState(5); // 5 = octave de base (0)
+export function KeyboardWrapper({ onNoteDown, onNoteUp }: KeyboardWrapperProps) {
+  const [octave, setOctave] = useState(5);
   const min = 1;
   const max = 8;
-
   const relative = octave - 5;
 
   return (
@@ -22,11 +22,9 @@ export function KeyboardWrapper({ onPlayNote }: KeyboardWrapperProps) {
         >
           ▲
         </button>
-        {relative == 0 ?  (
-          <span className="font-mono text-sm">{relative}</span>
-        ) : (
-          <span className="font-mono text-sm">{relative >= 0 ? `+${relative}` : relative}</span>
-        )}
+        <span className="font-mono text-sm">
+          {relative >= 0 ? `+${relative}` : relative}
+        </span>
         <button
           onClick={() => setOctave((o) => Math.max(o - 1, min))}
           className="text-xl hover:text-teal-400 transition"
@@ -37,7 +35,11 @@ export function KeyboardWrapper({ onPlayNote }: KeyboardWrapperProps) {
 
       {/* Clavier visuel */}
       <div className="flex items-center h-full">
-        <KeyboardOctave baseOctave={octave} onPlayNote={onPlayNote} />
+        <KeyboardOctave
+          baseOctave={octave}
+          onNoteDown={onNoteDown}
+          onNoteUp={onNoteUp}
+        />
       </div>
     </div>
   );

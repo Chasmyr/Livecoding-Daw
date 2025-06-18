@@ -24,7 +24,7 @@ return (
         </div>
     ) : (
         <GridArea>
-            <SynthPanel name="Lead Synth"/>
+            <SynthPanel name="Synth 1"/>
         </GridArea>
     )}
     </>

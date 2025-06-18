@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 interface KeyboardOctaveProps {
-  onPlayNote: (note: string) => void;
+  onNoteDown: (note: string) => void;
+  onNoteUp: () => void;
   baseOctave?: number;
 }
 
@@ -15,7 +16,8 @@ const BLACK_KEYS = [
 ];
 
 export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
-  onPlayNote,
+  onNoteDown,
+  onNoteUp,
   baseOctave = 5,
 }) => {
   const [octaves, setOctaves] = useState(2);
@@ -42,18 +44,21 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
     <div className="flex items-center justify-center">
       <div
         className="relative h-24 bg-zinc-300 border border-zinc-500 rounded-md shadow-inner select-none"
-        style={{ width: `${totalWhiteKeys * 40}px` }} // 40px par touche blanche
+        style={{ width: `${totalWhiteKeys * 40}px` }}
       >
         {/* Touches blanches */}
         <div className="flex h-full z-0">
           {Array.from({ length: octaves }).flatMap((_, octaveOffset) =>
             WHITE_KEYS.map((note) => {
               const currentOctave = baseOctave + octaveOffset;
+              const fullNote = `${note}${currentOctave}`;
               return (
                 <button
-                  key={`${note}${currentOctave}`}
+                  key={fullNote}
                   className="flex-1 border-r border-zinc-400 active:bg-blue-200 last:border-none"
-                  onClick={() => onPlayNote(`${note}${currentOctave}`)}
+                  onMouseDown={() => onNoteDown(fullNote)}
+                  onMouseUp={onNoteUp}
+                  onMouseLeave={onNoteUp}
                 >
                   &nbsp;
                 </button>
@@ -66,16 +71,19 @@ export const KeyboardOctave: React.FC<KeyboardOctaveProps> = ({
         {Array.from({ length: octaves }).flatMap((_, octaveOffset) =>
           BLACK_KEYS.map(({ note, position }) => {
             const currentOctave = baseOctave + octaveOffset;
+            const fullNote = `${note}${currentOctave}`;
             const indexOffset = octaveOffset * WHITE_KEYS.length;
             return (
               <button
-                key={`${note}${currentOctave}`}
-                onClick={() => onPlayNote(`${note}${currentOctave}`)}
+                key={fullNote}
                 className="absolute top-0 w-8 h-[65%] bg-black active:bg-zinc-700 rounded-sm shadow z-10"
                 style={{
                   left: `${(position + indexOffset + 1) * keyWidth - keyWidth / 2}%`,
                   transform: "translateX(-50%)",
                 }}
+                onMouseDown={() => onNoteDown(fullNote)}
+                onMouseUp={onNoteUp}
+                onMouseLeave={onNoteUp}
               />
             );
           })
