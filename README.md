@@ -87,7 +87,7 @@ npm run dev
 ```
 /front         → React + Vite + Tailwind
 /back          → Fastify + TypeScript + MongoDB
-/docker-compose.yml
+docker-compose.yml
 ```
 
 ---
@@ -114,8 +114,7 @@ npm run dev
 
 ## 🧑‍💻 Développeur
 
-Projet personnel imaginé et conçu par **[TonNom]**  
-Pour la musique libre et le code créatif 🎶
+Projet personnel imaginé et conçu par **[Gabi]** ✨  
 
 ---
 
