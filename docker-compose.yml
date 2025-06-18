@@ -9,27 +9,27 @@ services:
     env_file:
       - ./front/.env.front
     command: npm run dev
-    depends_on:
-      - backend
+    # depends_on:
+    #   - backend
 
-  backend:
-    build: ./back
-    volumes:
-      - ./back:/app
-      - /app/node_modules
-    ports:
-      - '3000:3000'
-    env_file:
-      - ./back/.env.back
-    command: npm run dev
+#   backend:
+#     build: ./back
+#     volumes:
+#       - ./back:/app
+#       - /app/node_modules
+#     ports:
+#       - '3000:3000'
+#     env_file:
+#       - ./back/.env.back
+#     command: npm run dev
 
 
-  mongo:
-    image: mongo
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongo_data:/data/db
+#   mongo:
+#     image: mongo
+#     ports:
+#       - '27017:27017'
+#     volumes:
+#       - mongo_data:/data/db
 
-volumes:
-  mongo_data:
+# volumes:
+#   mongo_data:
